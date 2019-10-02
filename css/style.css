@@ -20,31 +20,46 @@ h1 {
 .gameContainer {
     text-align: center;
     margin: 0 auto;
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #gameScreen {
     background: #ffdbac;
     border: 5px solid #ff5e49;
     border-radius: 20px;
-    z-index: 1;
 }
 
 .instructionsContainer {
+    margin-top: 20px;
     position: absolute;
-    top: 00;
-    right: 2;
-    z-index: 2;
-}
-
-#instructions {
-    background: #ff9378;
-    opacity: 50%;
-    border: 5px solid #ff5e49;
+    width: 500px;
+    height: 300px;
+    background: #ffb29f;
+    border: 5px solid #ff8b7b;
     border-radius: 20px;
+    font-family: "Gloria Hallelujah";
+    color: white;
+
+
 }
 
-p, small {
+.instructions {
+    opacity: 1;
+}
+
+.closeInstructions {
+    font-family: "Gloria Hallelujah";
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ff8b7b;
+    border: 2px dotted #ff8b7b;
+    border-radius: 10px;
+}
+
+footer p, footer small {
     margin: 0;
     font-family: 'Baloo Bhaijaan', cursive;
 }

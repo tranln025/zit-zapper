@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Baloo+Bhaijaan&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Ranchers&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah&display=swap" rel="stylesheet">    <link rel="stylesheet" href="./css/style.css">
+    <!-- Animate.CSS from daneden on github -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
     <title>Zit Zapper</title>
 </head>
@@ -15,10 +16,12 @@
         
         <h1 class="animated jello">Zit Zapper</h1>
         <div class="gameContainer">
-            <canvas id="gameScreen" width="700" height="450">Your browser does not support canvas.</canvas>
-            <div class="instructionsContainer">
-                <canvas id="instructions" width="640" height="350"></canvas>
+            <div class="instructionsContainer animated zoomIn delay-1s">
+                <h3>Instructions</h3>
+                <p class="instructions">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati amet itaque molestias molestiae laboriosam eligendi odio maiores magni nostrum. Dolores accusamus blanditiis numquam et architecto modi nam expedita necessitatibus iure?</p>
+                <button class="closeInstructions">START</button>
             </div>
+            <canvas id="gameScreen" width="700" height="450">Your browser does not support canvas.</canvas>
         </div>
     </main>
 

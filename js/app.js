@@ -27,12 +27,11 @@ ctx.fillStyle = "white";
 ctx.font = "25px Gloria Hallelujah";
 ctx.fillText("Points: " + points, 570, 35);
 
-// Instruction box pop-up
-const instructionBox = document.getElementById('instructions');
-// getContext('2d') allows you to access the drawing context for 2D graphics
-const instructions = instructionBox.getContext('2d');
-instructions.globalAlpha = 0.2;
-
+// Remove instruction box on button click
+$(`.closeInstructions`).on(`click`, () => {
+    console.log($(`.instructionsContainer`));
+    $(`.instructionsContainer`).removeClass(`zoomIn delay-1s`).addClass(`zoomOut`);
+})
 
 
 // // Small Flat Zit
