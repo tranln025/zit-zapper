@@ -25,7 +25,6 @@ ctx.fillText(timeLeft, 50, 35);
 const startTimer = () => {
     const timer = setInterval(()=>{    // setInterval ( function, amount of time )
         timeLeft--;
-        console.log(timeLeft);
         // Clear previous timer text and replace it each second with updated timeLeft
         ctx.clearRect(40, 0, 50, 50);
         ctx.fillStyle = 'rgb(255, 124, 110)';
@@ -51,7 +50,6 @@ $(`.start`).on(`click`, () => {
     console.log(`START has been clicked`);
     $(`.instructionsContainer`).removeClass(`zoomIn delay-1s`).addClass(`zoomOut`);
     // TODO create start game fx
-    // TODO start countdown fx
     startTimer();
 })
 
@@ -87,3 +85,7 @@ const randomZit = () => {
 };
 
 // in span of random time from 0 to 30 seconds, run random zit function
+const randomTimeInterval = (Math.random() * 5000) + 1000;
+const zitPopUp = setInterval(randomZit(), randomTimeInterval);
+
+// If zit clicked, change image to popped zit and then disappear
