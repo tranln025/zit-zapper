@@ -63,6 +63,11 @@ h1 {
     font-family: "Gloria Hallelujah";
     font-size: 25px;
     color: white;
+    cursor: url("./../images/fingers-apart-small.png") 64 17, pointer;
+}
+
+.gameScreen:active {
+    cursor: url("./../images/fingers-together-small.png") 64 17, pointer;
 }
 
 .scoreboard {

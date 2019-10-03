@@ -9,7 +9,7 @@ const startTimer = () => {
             updateTime();
             if (timeLeft === 0) {
                 clearInterval(timer);
-                // TODO display score and "try again" button
+                // TODO display final score and "try again" button
             }
         }
     }, 1000) 
@@ -38,7 +38,7 @@ let appearTime;
 
 function zitAppear(){
     let divsize = (Math.round(Math.random()*100) + 50);
-    $newZit = $('<img class="newZit" src="./images/flat-zit-unpopped.png" alt="ripe pimple">').css({
+    $newZit = $('<img class="newZit animated pulse" src="./images/flat-zit-unpopped.png" alt="ripe pimple">').css({
         'width':divsize+'px',
         'height':divsize+'px',
     });
@@ -92,7 +92,7 @@ const updatePoints = () => {
         pointsEarned = 5;
     } else if (reactionTime < 700) {
         pointsEarned = 4;
-    } else if (reactionTime < 900) {
+    } else if (reactionTime < 850) {
         pointsEarned = 3;
     } else if (reactionTime < 1000) {
         pointsEarned = 2;
@@ -130,7 +130,10 @@ const pointsPopUp = () => {
 
 // TODO / Stretch goals
 // Do not allow overlap of zits
-// Show amount of points earned per pop below score
+    // Do not allow overlap of zits
+    // Get position of zit
+    // put all zits with class .newZit and .poppedZit in an array
+    // get each zit's coordinates
 // Change cursor to two fingers, coming together on spacebar keydown
 // Scoreboard after game end with user input as name
 // Add sound effects
