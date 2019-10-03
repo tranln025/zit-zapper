@@ -31,8 +31,11 @@ $(`.start`).on(`click`, () => {
 })
 
 
-// // Randomize zit position and time interval
+// Randomize zit position and time interval
 // Source code for elements to appear sporadically and in various sizes: http://jsfiddle.net/redler/QcUPk/8/
+// Get time of zit appearance
+let appearTime;
+
 function zitAppear(){
     let divsize = (Math.round(Math.random()*100) + 50);
     $newZit = $('<img class="newZit" src="./images/flat-zit-unpopped.png" alt="ripe pimple">').css({
@@ -49,6 +52,8 @@ function zitAppear(){
         'top':posy+'px',
         'display':'none'
     }).appendTo('.gameScreen').fadeIn(); 
+
+    appearTime = Date.now();
 }; 
 
 setInterval(() => {
@@ -56,11 +61,77 @@ setInterval(() => {
     setTimeout(() => zitAppear(), randInterval);
 }, 2000);
 
-// when clicked, swap image of unpopped zit with popped zit and then add class fadeOutDown. after 2 seconds, remove() from document
+
+// When clicked, swap image of unpopped zit with popped zit and then add class fadeOutDown. after 2 seconds, remove from document
+let clickedTime;
+let reactionTime;
+
 $(`.gameScreen`).on(`click`, `.newZit`, function() {
-    console.log('pop', this);
-    $(this).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`).attr(`src`, `./images/flat-zit-popped.png`);
+    $(this).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
     setTimeout(() => {
         $(this).remove();
-    }, 500)
-})
+    }, 1500);
+
+    // Get elapsed time between appearance and click of zit
+    clickedTime = Date.now();
+    reactionTime = clickedTime - appearTime;
+    console.log("clicked time: " + clickedTime);
+    console.log("appearance time: " + appearTime);
+    console.log("reactiontime: " + reactionTime);
+
+    // Award points based on reaction time and update score. Show points earned for each pop
+    updatePoints();
+});
+
+// Points System
+let points = 0;
+let pointsEarned = 0;
+
+const updatePoints = () => {
+    if (reactionTime < 500) {
+        pointsEarned = 5;
+    } else if (reactionTime < 700) {
+        pointsEarned = 4;
+    } else if (reactionTime < 900) {
+        pointsEarned = 3;
+    } else if (reactionTime < 1000) {
+        pointsEarned = 2;
+    } else {
+        pointsEarned = 1;
+    }
+
+    points += pointsEarned;
+    $(`#points`).text(`${points}`);
+
+    console.log("points earned: " + pointsEarned);
+    console.log("total points: " + points)
+    console.log("----------------");
+
+    pointsPopUp();
+
+}
+
+const pointsPopUp = () => {
+    $(`.gameScreen`).append(`
+        <h3 class="points-earned">+${pointsEarned}</h2>
+    `);
+    $(`.points-earned`).addClass(`animated fadeInDown`);
+    setTimeout(function() {
+        $(`.points-earned`).removeClass(`fadeInDown`).addClass(`fadeOut`);
+    }, 1000)
+}
+
+
+
+
+
+
+
+
+// TODO / Stretch goals
+// Do not allow overlap of zits
+// Show amount of points earned per pop below score
+// Change cursor to two fingers, coming together on spacebar keydown
+// Scoreboard after game end with user input as name
+// Add sound effects
+// Add rounds into the game? Each round faster generation of zits
