@@ -1,13 +1,15 @@
-html {
+* {
     margin: 0;
 }
 
+
 body {
-    margin: 0;
+    margin-top: 30px;
     display: flex;
-    min-height: 100vh;
+    min-height: 96vh;
     flex-direction: column;
     justify-content: space-between;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -19,34 +21,24 @@ h1 {
 
 .gameContainer {
     text-align: center;
-    margin: 0 auto;
+    margin: 40px auto 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#gameScreen {
-    background: #ffdbac;
-    border: 5px solid #ff5e49;
-    border-radius: 20px;
-}
-
 .instructionsContainer {
     margin-top: 20px;
+    padding: 10px;
     position: absolute;
-    width: 500px;
+    width: 550px;
     height: 300px;
     background: #ffb29f;
     border: 5px solid #ff8b7b;
     border-radius: 20px;
     font-family: "Gloria Hallelujah";
     color: white;
-
-
-}
-
-.instructions {
-    opacity: 1;
+    z-index: 1;
 }
 
 .start {
@@ -57,10 +49,61 @@ h1 {
     color: #ff8b7b;
     border: 2px dotted #ff8b7b;
     border-radius: 10px;
+    margin-top: 80px;
+}
+
+.gameScreen {
+    width: 700px;
+    height: 450px;
+    background: #ffdbac;
+    border: 5px solid #ff5e49;
+    border-radius: 20px;
+    position: relative;
+    z-index: 0;
+}
+
+.scoreboard {
+    background-color: rgb(255, 124, 110);
+    border-radius: 15px 15px 0 0;
+    position: absolute;
+    width: 700px;
+    height: 50px;
+    font-family: "Gloria Hallelujah";
+    font-size: 25px;
+    color: white;
+}
+
+.timer {
+    width: 300px;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.stopwatch {
+    position: absolute;
+    width: 27px;
+    height: 30px;
+    top: 10px;
+    left: 10px;
+}
+
+.countdown {
+    position: absolute;
+    top: 5px;
+    left: 50px;
+    line-height: 35px;
+}
+
+.score {
+    position: absolute;
+    top: 5px;
+    right: 30px;
+    line-height: 35px;
 }
 
 footer p, footer small {
-    margin: 0;
     font-family: 'Baloo Bhaijaan', cursive;
 }
 
@@ -68,7 +111,6 @@ footer {
     background-color: #EDC7CF;
     color: #85043a;
     padding: 10px;
-    margin: 0;
     width: 100%;
     text-align: center;
 }
