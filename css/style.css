@@ -38,7 +38,7 @@ h1 {
     border-radius: 20px;
     font-family: "Gloria Hallelujah";
     color: white;
-    z-index: 1;
+    z-index: 2;
 }
 
 .start {
@@ -63,11 +63,18 @@ h1 {
     font-family: "Gloria Hallelujah";
     font-size: 25px;
     color: white;
-    cursor: url("./../images/fingers-apart-small.png") 64 17, pointer;
+    /* cursor: url("./../images/fingers-apart-small.png") 64 17, pointer; */
 }
 
-.gameScreen:active {
+/* .gameScreen:active {
     cursor: url("./../images/fingers-together-small.png") 64 17, pointer;
+} */
+
+#fingersApart {
+    position: absolute; 
+    top: 225px; 
+    left: 286px;
+    z-index: 1;
 }
 
 .scoreboard {
