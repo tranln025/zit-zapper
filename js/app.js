@@ -59,7 +59,9 @@ function zitAppear(){
     appearTime;
     let thisZit = {
         id: zits.length,
-        time: appearTime
+        time: appearTime,
+        position: zitPos,
+        size: zitSize,
     }
     zits.push(thisZit);
     
@@ -70,10 +72,6 @@ function zitAppear(){
         'top':posy+'px',
         'display':'none'
     }).appendTo('.gameScreen').fadeIn(); 
-
-
-    // Return the zit position for 
-    return zitPos;
 }; 
 
 // Each 2 seconds, zitAppear is run
@@ -88,7 +86,6 @@ let clickedTime;
 let reactionTime;
 
 $(`.gameScreen`).on(`click`, `.newZit`, function(event) {
-    console.log("click event here: ", event)
     $(this).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
     setTimeout(() => {
         $(this).remove();
@@ -174,14 +171,36 @@ setInterval(function() {
     });
 }, 20);
 
-// When spacebar is pressed over zit, change img of fingers apart to fingers together and pop
-// if overlapping a zit, and spacebar is pressed, pop zit
-// get position of center of fingers and position of zit
-// when positions are ~equal, pop
-let fingersPos = $fingers.position();
-console.log(fingersPos);
+// When fingers overlap zit and spacebar is pressed:
+    // change img of fingers apart to fingers together
+    // swap image of unpopped zit with popped zit, update classes
+    // after 1.5 seconds, remove from document
+// To determine if fingers overlap a zit:
+    // If fingers center x coordinate is within zit x boundaries AND fingers center y coordinate is within zit y boundaries, pop zit
+
+$(window).on(`keydown`, (event) => {
+    if (event.which === 32) {
+        for (let i = 0; i < zits.length; i++) {
+            let fingersPos = $fingers.position();
+            if (fingersPos.left + 64 > zits[i].position.left + (.25 * zits[i].size) && 
+            fingersPos.left + 64 < zits[i].position.left + (.75 * zits[i].size) &&
+            fingersPos.top + 17 > zits[i].position.top + (.25 * zits[i].size) &&
+            fingersPos.top + 17 < zits[i].position.top + (.75 * zits[i].size)) {
+
+                // Pop the zit
+                $(`#${i}`).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
+                setTimeout(() => {
+                    $(`#${i}`).remove();
+                }, 1500);
+            }
+        }
+    }
+})
 
 
+// fingersPos = { top: 225, left: 286 }
+
+// let zitPos = { left: posx, top: posy }
 
 
 
