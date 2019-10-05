@@ -1,4 +1,3 @@
-
 // Timer Countdown Functions
 // Every second, reduce countdown by 1 while there is time left. At time=0, stop the countdown, display score, offer "try again" button. On button click, restart countdown
 let timeLeft = 30;
@@ -7,9 +6,15 @@ const startTimer = () => {
         timeLeft --;
         if (timeLeft >= 0) {
             updateTime();
-            if (timeLeft === 0) {
-                clearInterval(timer);
-                // TODO display final score and "try again" button
+            if (timeLeft <= 5) {
+                $(`.countdown`).css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            }
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    // TODO display final score and "try again" button
             }
         }
     }, 1000) 
