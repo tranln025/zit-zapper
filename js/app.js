@@ -19,6 +19,7 @@ const updateTime = () => {
     $(`.countdown`).text(`${timeLeft} seconds`)
 }
 
+
 // When Start is clicked, zoom out of instructions, remove from game screen, and start game
 $(`.start`).on(`click`, () => {
     console.log(`START has been clicked`);
@@ -29,6 +30,40 @@ $(`.start`).on(`click`, () => {
     // TODO create start game fx
     startTimer();
 })
+
+
+// Navigate in the gameScreen using arrow keys
+// Source: https://stackoverflow.com/questions/4950575/how-to-move-a-div-with-arrow-keys
+
+var $gameWindow = $('.gameScreen'),
+    $fingers = $('#fingersApart'),
+    maxWidth = $gameWindow.width() - $fingers.width(),
+    maxHeight = $gameWindow.height() - $fingers.height(),
+    keysPressed = {},
+    distanceMoved = 5;
+
+function calculateNewWidth(oldValue,a,b) {
+    var n = parseInt(oldValue, 10) - (keysPressed[a] ? distanceMoved : 0) + (keysPressed[b] ? distanceMoved : 0);
+    return n < 0 ? 0 : n > maxWidth ? maxWidth : n;
+}
+function calculateNewHeight(oldValue,a,b) {
+    var n = parseInt(oldValue, 10) - (keysPressed[a] ? distanceMoved : 0) + (keysPressed[b] ? distanceMoved : 0);
+    return n < 50 ? 50 : n > maxHeight ? maxHeight : n;
+}
+
+$(window).keydown(function(e) { keysPressed[e.which] = true; });
+$(window).keyup(function(e) { keysPressed[e.which] = false; });
+
+setInterval(function() {
+    $fingers.css({
+        left: function(i, oldValue) { 
+            return calculateNewWidth(oldValue, 37, 39); 
+        },
+        top: function(i, oldValue) { 
+            return calculateNewHeight(oldValue, 38, 40); 
+        }
+    });
+}, 20);
 
 
 // Randomize zit position and time interval
@@ -45,8 +80,8 @@ function zitAppear(){
     });
     
     // Generates random position of zit
-    let posx = Math.random() * ($(`.gameScreen`).width() - zitSize);
-    let posy = Math.random() * (($(`.gameScreen`).height() - zitSize) - 50) + 50;
+    let posx = Math.random() * ($(`.gameScreen`).width() - zitSize - 50) + 20;
+    let posy = Math.random() * (($(`.gameScreen`).height() - zitSize) - 40) + 40;
     let zitPos = {
         left: posx,
         top: posy
@@ -81,41 +116,63 @@ setInterval(() => {
 }, 2000);
 
 
-// When clicked, swap image of unpopped zit with popped zit and then add class fadeOutDown. after 2 seconds, remove from document
-let clickedTime;
-let reactionTime;
+// When fingers overlap zit and spacebar is pressed:
+    // change img of fingers apart to fingers together
+    // swap image of unpopped zit with popped zit, update classes
+    // after 1.5 seconds, remove from document
+// To determine if fingers overlap a zit:
+    // If fingers center x coordinate is within zit x boundaries AND fingers center y coordinate is within zit y boundaries, pop zit
 
-$(`.gameScreen`).on(`click`, `.newZit`, function(event) {
-    $(this).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
-    setTimeout(() => {
-        $(this).remove();
-    }, 1500);
+    $(window).on(`keydown`, (event) => {
+        // If spacebar is pressed,
+        if (event.which === 32) {
+            // Finger squeeze
+            $(`#fingersApart`).attr(`src`, `./images/fingers-together-small-2.png`)
+            setTimeout(() => {
+                $(`#fingersApart`).attr(`src`, `./images/fingers-apart-small-2.png`)
+            }, 500)
+    
+            // For each zit on screen, if fingers overlap,
+            for (let i = 0; i < zits.length; i++) {
+                let fingersPos = $fingers.position();
+                if (fingersPos.left + 59 > zits[i].position.left + (.25 * zits[i].size) && 
+                fingersPos.left + 59 < zits[i].position.left + (.75 * zits[i].size) &&
+                fingersPos.top + 14 > zits[i].position.top + (.25 * zits[i].size) &&
+                fingersPos.top + 14 < zits[i].position.top + (.75 * zits[i].size)) {
+    
+                    // Pop the zit
+                    $(`#${i}`).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
+                    setTimeout(() => {
+                        $(`#${i}`).remove();
+                    }, 1500);
 
-    // Get elapsed time between appearance and click of zit
-    clickedTime = Date.now();
-    console.log(event.target.id);
-    console.log(zits[event.target.id]);
-    reactionTime = clickedTime - zits[event.target.id].time;
-    console.log("clicked time: " + clickedTime);
-    console.log("appearance time: " + zits[event.target.id].time);
-    console.log("reactiontime: " + reactionTime);
+                    // Get elapsed time between appearance and click of zit
+                    clickedTime = Date.now();
+                    reactionTime = clickedTime - zits[i].time;
+                    console.log("clicked time: " + clickedTime);
+                    console.log("appearance time: " + zits[i].time);
+                    console.log("reactiontime: " + reactionTime);
 
-    // Award points based on reaction time and update score. Show points earned for each pop
-    updatePoints();
-});
+                    // Award points based on reaction time and update score. Show points earned for each pop
+                    updatePoints();
+                }
+            }
+        }
+    })
+    
 
 // Points System
 let points = 0;
 let pointsEarned = 0;
 
 const updatePoints = () => {
-    if (reactionTime < 500) {
+    if (reactionTime < 1000) {
         pointsEarned = 5;
-    } else if (reactionTime < 700) {
+    } else if (reactionTime < 2000) {
         pointsEarned = 4;
-    } else if (reactionTime < 850) {
+    } else if (reactionTime < 3000) {
         pointsEarned = 3;
-    } else if (reactionTime < 1000) {
+    } else if (reactionTime < 4000) {
         pointsEarned = 2;
     } else {
         pointsEarned = 1;
@@ -129,7 +186,6 @@ const updatePoints = () => {
     console.log("----------------");
 
     pointsPopUp();
-
 }
 
 const pointsPopUp = () => {
@@ -141,66 +197,6 @@ const pointsPopUp = () => {
         $(`.points-earned`).removeClass(`fadeInDown`).addClass(`fadeOut`);
     }, 1000)
 }
-
-// Navigate in the gameScreen using arrow keys
-// Source: https://stackoverflow.com/questions/4950575/how-to-move-a-div-with-arrow-keys
-
-var $gameWindow = $('.gameScreen'),
-    $fingers = $('#fingersApart'),
-    maxValue = $gameWindow.width() - $fingers.width(),
-    heightValue = $gameWindow.height() - $fingers.height(),
-    keysPressed = {},
-    distanceMoved = 3;
-
-function calculateNewWidth(oldValue,a,b) {
-    var n = parseInt(oldValue, 10) - (keysPressed[a] ? distanceMoved : 0) + (keysPressed[b] ? distanceMoved : 0);
-    return n < 0 ? 0 : n > maxValue ? maxValue : n;
-}
-function calculateNewHeight(oldValue,a,b) {
-    var n = parseInt(oldValue, 10) - (keysPressed[a] ? distanceMoved : 0) + (keysPressed[b] ? distanceMoved : 0);
-    return n < 0 ? 0 : n > heightValue ? heightValue : n;
-}
-
-$(window).keydown(function(e) { keysPressed[e.which] = true; });
-$(window).keyup(function(e) { keysPressed[e.which] = false; });
-
-setInterval(function() {
-    $fingers.css({
-        left: function(i, oldValue) { return calculateNewWidth(oldValue, 37, 39); },
-        top: function(i, oldValue) { return calculateNewHeight(oldValue, 38, 40); }
-    });
-}, 20);
-
-// When fingers overlap zit and spacebar is pressed:
-    // change img of fingers apart to fingers together
-    // swap image of unpopped zit with popped zit, update classes
-    // after 1.5 seconds, remove from document
-// To determine if fingers overlap a zit:
-    // If fingers center x coordinate is within zit x boundaries AND fingers center y coordinate is within zit y boundaries, pop zit
-
-$(window).on(`keydown`, (event) => {
-    if (event.which === 32) {
-        for (let i = 0; i < zits.length; i++) {
-            let fingersPos = $fingers.position();
-            if (fingersPos.left + 64 > zits[i].position.left + (.25 * zits[i].size) && 
-            fingersPos.left + 64 < zits[i].position.left + (.75 * zits[i].size) &&
-            fingersPos.top + 17 > zits[i].position.top + (.25 * zits[i].size) &&
-            fingersPos.top + 17 < zits[i].position.top + (.75 * zits[i].size)) {
-
-                // Pop the zit
-                $(`#${i}`).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
-                setTimeout(() => {
-                    $(`#${i}`).remove();
-                }, 1500);
-            }
-        }
-    }
-})
-
-
-// fingersPos = { top: 225, left: 286 }
-
-// let zitPos = { left: posx, top: posy }
 
 
 

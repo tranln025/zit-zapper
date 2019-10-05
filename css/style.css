@@ -132,7 +132,7 @@ footer p, footer small {
 footer {
     background-color: #EDC7CF;
     color: #85043a;
-    padding: 10px;
+    padding: 10px 0;
     width: 100%;
     text-align: center;
 }
