@@ -1,7 +1,6 @@
 // Timer Countdown Functions
 // Every second, reduce countdown by 1 while there is time left. At time=0, stop the countdown, display score, offer "try again" button. On button click, restart countdown
 let timeLeft = 30;
-
 const startTimer = () => {
     const timer = setInterval(() => {
         timeLeft --;
@@ -16,7 +15,6 @@ const startTimer = () => {
                 if (timeLeft === 0) {
                     clearInterval(timer);
                     endGame();
-                    // TODO stop making zits
             }
         }
     }, 1000) 
@@ -130,45 +128,42 @@ $(`.start`).on(`click`, () => {
 // To determine if fingers overlap a zit:
     // If fingers center x coordinate is within zit x boundaries AND fingers center y coordinate is within zit y boundaries, pop zit
 
-$(window).on(`keydown`, (event) => {
-    // If spacebar is pressed,
-    if (event.which === 32) {
-        // Finger squeeze
-        $(`#fingersApart`).attr(`src`, `./images/fingers-together-small-2.png`)
-        setTimeout(() => {
-            $(`#fingersApart`).attr(`src`, `./images/fingers-apart-small-2.png`)
-        }, 500)
+    $(window).on(`keydown`, (event) => {
+        // If spacebar is pressed,
+        if (event.which === 32) {
+            // Finger squeeze
+            $(`#fingersApart`).attr(`src`, `./images/fingers-together-small-2.png`)
+            setTimeout(() => {
+                $(`#fingersApart`).attr(`src`, `./images/fingers-apart-small-2.png`)
+            }, 500)
+    
+            // For each zit on screen, if fingers overlap,
+            for (let i = 0; i < zits.length; i++) {
+                let fingersPos = $fingers.position();
+                if (fingersPos.left + 59 > zits[i].position.left + (.25 * zits[i].size) && 
+                fingersPos.left + 59 < zits[i].position.left + (.75 * zits[i].size) &&
+                fingersPos.top + 14 > zits[i].position.top + (.25 * zits[i].size) &&
+                fingersPos.top + 14 < zits[i].position.top + (.75 * zits[i].size)) {
+    
+                    // Pop the zit
+                    $(`#${i}`).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
+                    setTimeout(() => {
+                        $(`#${i}`).remove();
+                    }, 1500);
 
-        // For each zit on screen, if fingers overlap,
-        for (let i = 0; i < zits.length; i++) {
-            let fingersPos = $fingers.position();
-            if (fingersPos.left + 59 > zits[i].position.left + (.25 * zits[i].size) && 
-            fingersPos.left + 59 < zits[i].position.left + (.75 * zits[i].size) &&
-            fingersPos.top + 14 > zits[i].position.top + (.25 * zits[i].size) &&
-            fingersPos.top + 14 < zits[i].position.top + (.75 * zits[i].size)) {
+                    // Get elapsed time between appearance and click of zit
+                    clickedTime = Date.now();
+                    reactionTime = clickedTime - zits[i].time;
+                    console.log("clicked time: " + clickedTime);
+                    console.log("appearance time: " + zits[i].time);
+                    console.log("reactiontime: " + reactionTime);
 
-                // Pop the zit
-                $(`#${i}`).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
-                setTimeout(() => {
-                    $(`#${i}`).remove();
-                }, 1500);
-
-                // Get elapsed time between appearance and click of zit
-                clickedTime = Date.now();
-                reactionTime = clickedTime - zits[i].time;
-                console.log("clicked time: " + clickedTime);
-                console.log("appearance time: " + zits[i].time);
-                console.log("reactiontime: " + reactionTime);
-
-                // Check if the zit has been popped. If not, award points based on reaction time and update score. Show points earned for each pop
-                // TODO this doesn't work ://
-                // if ($(`#${i}`).hasClass("poppedZit") === false) {
+                    // Award points based on reaction time and update score. Show points earned for each pop
                     updatePoints();
-                // }
+                }
             }
         }
-    }
-})
+    })
     
 
 // Points System
@@ -205,75 +200,69 @@ const pointsPopUp = () => {
     $(`.points-earned`).addClass(`animated fadeInDown`);
     setTimeout(function() {
         $(`.points-earned`).removeClass(`fadeInDown`).addClass(`fadeOut`);
-    }, 1000);
-    setTimeout(function() {
-        $(`.points-earned`).remove();
-    }, 2000)
+    }, 1000)
 }
 
+// Game Over screen
+// Retrieve user name
+// Display top 3 names and scores
 
-// Game Over screen & leaderboard
+const leaderboard = [];
+const players = [];
+const scores = [];
 
-// Dummy values in array so no values show up undefined
-const leaderboard = [{ name: "", score: "" }, { name: "", score: "" }, { name: "", score: "" }];
-
-// Append input form to get player name, display score, show leaderboard
 const endGame = () => {
+    // get user name input
+    // add name to array
+    // sort array descending order
+    // display winner as names[0]
+    appendForm();
+
+    
+
+    
+}
+
+// Append form to input player name
+const appendForm = () => {
     $(`.gameContainer`).append(`
         <div class="gameOver animated zoomIn delay-1s">
-            <br/>
-            <h2>GAME OVER</h2>
-            <h3>Enter your name to see where you stand</h3>
-            <form>
+            <h3>GAME OVER</h3>
+            <p>Enter your name to see where you stand</p>
+            <form action="/action_page.php">
                 <input type="text">
-                <button type="submit" value="Submit">Submit</button>
+                <input type="submit" value="Submit">
             </form>
         </div>
     `);
-
-    // On Submit, 
-    $(`form`).on(`submit`, function (event) {
-        event.preventDefault();
-    
-        // Push inputted name and score into array
-        leaderboard.push({
-            name: $(`input:text`).val(),
-            score: points
-        });
-
-        // Sort array by player scores
-        // Source: https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-        leaderboard.sort( (a, b) => (a.score < b.score ? 1 : -1));
-        console.log(leaderboard);
-
-        // Replace form with leaderboard
-        $(`.gameOver`).html(`
-            <h2>Your score: ${points}</h2>
-            <h2 id="leaderboard-header">LEADERBOARD</h2>
-            <ol>
-                <li>${leaderboard[0].name} --- ${leaderboard[0].score}</li>
-                <li>${leaderboard[1].name} --- ${leaderboard[1].score}</li>
-                <li>${leaderboard[2].name} --- ${leaderboard[2].score}</li>
-            </ol>
-            <button id="replay">PLAY AGAIN</button>
-        `);
-
-        // When replay button is pressed, remove gameOver div, start timer again, generate zits
-        $(`#replay`).on(`click`, () => {
-            $(`.gameOver`).remove();
-            timeLeft = 30;
-            points = 0;
-            updateTime();
-            $(`#points`).text(`${points}`);
-            startTimer();
-            setInterval(() => {
-                let randInterval = Math.random() * 2000;
-                setTimeout(() => zitAppear(), randInterval);
-            }, 2000);        
-        })
-    })
 }
 
+// On submit, push input value into array, remove form and replace 
+$(`form`).on(`submit`, function () {
+    event.preventDefault();
+    leaderboard.push({
+        name: $(`input:text`).val(),
+        score: 0
+    }
+    )
+})
+
+class Game {
+    constructor (player) {
+        this.round = 0;
+        this.points = points;
+        this.player = player;    
+    }
+    
+}
+
+class Player {
+    constructor (name, finalPoints) {
+        this.name = name;
+        this.points = finalPoints;
+    }
+
+}
 
 
 
