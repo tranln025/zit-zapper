@@ -1,3 +1,4 @@
+
 // Timer Countdown Functions
 // When timer starts, reset round
 // Every second, reduce countdown by 1 while there is time left.
@@ -289,7 +290,13 @@ const pointsPopUp = () => {
 // Game Over screen & leaderboard
 
 // Dummy values in array so no values show up undefined
-const leaderboard = [{ name: "", score: "" }, { name: "", score: "" }, { name: "", score: "" }];
+// const leaderboard = [{ name: "", score: "" }, { name: "", score: "" }, { name: "", score: "" }];
+let leaderboard = {"": ""};
+const localStorage = window.localStorage;
+const lsLeaderboard = localStorage.getItem("leaderboard");
+if (lsLeaderboard) {
+    leaderboard = JSON.parse(lsLeaderboard);
+}
 
 // Append input form to get player name, display score, show leaderboard
 const endGame = () => {
@@ -310,27 +317,32 @@ const endGame = () => {
         event.preventDefault();
     
         // Push inputted name and score into array
-        leaderboard.push({
-            name: $(`input:text`).val(),
-            score: points
-        });
+        // leaderboard.push({
+        //     name: $(`input:text`).val(),
+        //     score: points
+        // });
+        leaderboard[$(`input:text`).val()] = points;
 
         // Sort array by player scores
         // Source: https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
-        leaderboard.sort( (a, b) => (a.score < b.score ? 1 : -1));
-        console.log(leaderboard);
+        let descendingKeys = Object.keys(leaderboard).sort( (a, b) => (leaderboard[a] < leaderboard[b]? 1 : -1));
+        let firstPlace = descendingKeys[0];
+        let secondPlace = descendingKeys.length > 1 ? descendingKeys[1] : "";
+        let thirdPlace = descendingKeys.length > 2 ? descendingKeys[2] : "";
 
         // Replace form with leaderboard
         $(`.gameOver`).html(`
             <h2>Your score: ${points}</h2>
             <h2 id="leaderboard-header">LEADERBOARD</h2>
             <ol>
-                <li>${leaderboard[0].name} --- ${leaderboard[0].score}</li>
-                <li>${leaderboard[1].name} --- ${leaderboard[1].score}</li>
-                <li>${leaderboard[2].name} --- ${leaderboard[2].score}</li>
+                <li>${firstPlace} --- ${leaderboard[firstPlace]}</li>
+                <li>${secondPlace} --- ${leaderboard[secondPlace]}</li>
+                <li>${thirdPlace} --- ${leaderboard[thirdPlace]}</li>
             </ol>
             <button id="replay">PLAY AGAIN</button>
         `);
+ 
+        localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
         // When replay button is pressed, remove gameOver div, remove all zits, reset points, restart timer.
         $(`#replay`).on(`click`, () => {
