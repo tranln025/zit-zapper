@@ -1,8 +1,13 @@
 // Timer Countdown Functions
-// Every second, reduce countdown by 1 while there is time left. At time=0, stop the countdown, display score, offer "try again" button. On button click, restart countdown
+// When timer starts, reset round
+// Every second, reduce countdown by 1 while there is time left.
+// At 5 seconds or less on the clock, display score in red
+// Check value of timeLeft to determine when new round starts and increase speed
+// At time=0, display end game screen
 let timeLeft = 30;
 
 const startTimer = () => {
+    $(`.round h3`).text(`Round 1`);
     let zitSpawnChanger = adjustZitSpawnSpeed();
     const timer = setInterval(() => {
         if (timeLeft >= 0) {
@@ -17,9 +22,6 @@ const startTimer = () => {
             if (timeLeft === 0) {
                 clearInterval(timer);
                 endGame();
-                // setInterval(() => {
-                //     $(`.newZit`).remove();
-                // }, 20)
             };
         }
         timeLeft --;
@@ -50,8 +52,12 @@ function calculateNewHeight(oldValue,a,b) {
     return n < 50 ? 50 : n > maxHeight ? maxHeight : n;
 }
 
-$(window).keydown(function(e) { keysPressed[e.which] = true; });
-$(window).keyup(function(e) { keysPressed[e.which] = false; });
+$(window).keydown(function(e) {
+     keysPressed[e.which] = true; 
+});
+$(window).keyup(function(e) { 
+    keysPressed[e.which] = false; 
+});
 
 setInterval(function() {
     $fingers.css({
@@ -127,32 +133,44 @@ const adjustZitSpawnSpeed = () => {
             }, 2000)   
         } else if (timeLeft > 10 && timeLeft <= 20) {
             // Round 2
-            // Generate zits at 1500 speed
+            // Update round
+            // Generate zits at 1300 speed
             if (lastTimeCall > 20) {
                 clearInterval(currRound);
                 currRound = null;
+                $(`.round h3`).text(`Round 2`);
+                $(`.round h3`).addClass(`animated tada`);
+                setTimeout(() => {
+                    $(`.round h3`).removeClass(`animated tada`);
+                }, 1500);
             }
             if (currRound) {
                 return;
             }
             currRound = setInterval( () => {
-                let randInterval = Math.random() * 1500;
+                let randInterval = Math.random() * 1300;
                 setTimeout(() => createZit(), randInterval);
-            }, 1500)    
+            }, 1300)    
         } else if (timeLeft > 0 && timeLeft <= 10) {
             // Round 3
-            // Generate zits at 1000 speed
+            // Update round
+            // Generate zits at 900 speed
             if (lastTimeCall > 10) {
                 clearInterval(currRound);
                 currRound = null;
+                $(`.round h3`).text(`Round 3`);
+                $(`.round h3`).addClass(`animated tada`);
+                setTimeout(() => {
+                    $(`.round h3`).removeClass(`animated tada`);
+                }, 1500);
             }
             if (currRound) {
                 return;
             }
             currRound = setInterval( () => {
-                let randInterval = Math.random() * 1000;
+                let randInterval = Math.random() * 900;
                 setTimeout(() => createZit(), randInterval);
-            }, 1000)    
+            }, 900)    
         } else {
             clearInterval(currRound);
         }
@@ -245,7 +263,7 @@ const updatePoints = () => {
     }
 
     points += pointsEarned;
-    $(`#points`).text(`${points}`);
+    $(`#points`).text(`Points: ${points}`);
 
     console.log("points earned: " + pointsEarned);
     console.log("total points: " + points)
@@ -314,14 +332,14 @@ const endGame = () => {
             <button id="replay">PLAY AGAIN</button>
         `);
 
-        // When replay button is pressed, remove gameOver div, start timer again, generate zits
+        // When replay button is pressed, remove gameOver div, remove all zits, reset points, restart timer.
         $(`#replay`).on(`click`, () => {
             $(`.gameOver`).remove();
             $(`.newZit`).remove();
             timeLeft = 30;
             points = 0;
             updateTime();
-            $(`#points`).text(`${points}`);
+            $(`#points`).text(`Points: ${points}`);
             startTimer();
         })
     })
@@ -338,7 +356,4 @@ const endGame = () => {
     // Get position of zit
     // put all zits with class .newZit and .poppedZit in an array
     // get each zit's coordinates
-// Change cursor to two fingers, coming together on spacebar keydown
-// Scoreboard after game end with user input as name
 // Add sound effects
-// Add rounds into the game? Each round faster generation of zits
