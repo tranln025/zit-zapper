@@ -1,3 +1,7 @@
+// Pop sound effect
+const pop = new Audio();
+pop.src = "./../sounds/pop.mp3"
+
 
 // Timer Countdown Functions
 // When timer starts, reset round
@@ -216,6 +220,7 @@ $(window).on(`keydown`, (event) => {
             fingersPos.top + 14 < zits[i].position.top + (.75 * zits[i].size)) {
 
                 // Pop the zit
+                pop.play();
                 $(`#${i}`).attr(`src`, `./images/flat-zit-popped.png`).removeClass(`newZit`).addClass(`poppedZit animated fadeOut delay-1s`);
                 setTimeout(() => {
                     $(`#${i}`).remove();
