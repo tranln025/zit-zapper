@@ -1,5 +1,8 @@
 # Zit Zapper
 
+## Play me:
+https://pages.git.generalassemb.ly/ltran/zit-zapper/
+
 ## Why, oh why did you make this game?
 When life gets stressful, it manifests in the form of unsightly zits. There are few pleasures in life as simple and as satisfying as squeezing the ever-loving heck out of a ripe zit to purge your skin of toxins and misery. Of course, popping your pimples is a huge no no, so I've created a virtual alternative! Pop to your heart's content without the swelling or scarring of zapping zits irl. Please enjoy!
 
