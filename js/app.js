@@ -3,22 +3,26 @@
 let timeLeft = 30;
 
 const startTimer = () => {
+    let zitSpawnChanger = adjustZitSpawnSpeed();
     const timer = setInterval(() => {
-        timeLeft --;
         if (timeLeft >= 0) {
             updateTime();
+            zitSpawnChanger(timeLeft);
             if (timeLeft <= 5) {
                 $(`.countdown`).css({
                     'color': 'red',
                     'font-weight': 'bold'
                 });
             }
-                if (timeLeft === 0) {
-                    clearInterval(timer);
-                    endGame();
-                    // TODO stop making zits
-            }
+            if (timeLeft === 0) {
+                clearInterval(timer);
+                endGame();
+                // setInterval(() => {
+                //     $(`.newZit`).remove();
+                // }, 20)
+            };
         }
+        timeLeft --;
     }, 1000) 
 }
 
@@ -65,7 +69,7 @@ setInterval(function() {
 // Source code for elements to appear sporadically and in various sizes: http://jsfiddle.net/redler/QcUPk/8/
 let zits = []
 
-function zitAppear() {
+function createZit() {
 
     // Generates random size of zit
     let zitSize = (Math.round(Math.random()*100) + 50);
@@ -86,7 +90,6 @@ function zitAppear() {
     let appearTime = Date.now();
 
     // Push each generated zit into zits array as an object
-    appearTime;
     let thisZit = {
         id: zits.length,
         time: appearTime,
@@ -104,6 +107,59 @@ function zitAppear() {
     }).appendTo('.gameScreen').fadeIn(); 
 }; 
 
+// Random generation of zits, gets faster every 10 sec. If timeLeft = 0, do not generate any
+
+
+const adjustZitSpawnSpeed = () => {
+    let currRound = null;
+    let lastTimeCall = null;
+    return (timeLeft) => {
+        if (timeLeft > 20 && timeLeft <= 30) {
+            // Round 1
+            // Generate zits at 2000 speed 
+            if (currRound) {
+                return;
+            }
+            createZit();
+            currRound = setInterval( () => {
+                let randInterval = Math.random() * 2000;
+                setTimeout(() => createZit(), randInterval);
+            }, 2000)   
+        } else if (timeLeft > 10 && timeLeft <= 20) {
+            // Round 2
+            // Generate zits at 1500 speed
+            if (lastTimeCall > 20) {
+                clearInterval(currRound);
+                currRound = null;
+            }
+            if (currRound) {
+                return;
+            }
+            currRound = setInterval( () => {
+                let randInterval = Math.random() * 1500;
+                setTimeout(() => createZit(), randInterval);
+            }, 1500)    
+        } else if (timeLeft > 0 && timeLeft <= 10) {
+            // Round 3
+            // Generate zits at 1000 speed
+            if (lastTimeCall > 10) {
+                clearInterval(currRound);
+                currRound = null;
+            }
+            if (currRound) {
+                return;
+            }
+            currRound = setInterval( () => {
+                let randInterval = Math.random() * 1000;
+                setTimeout(() => createZit(), randInterval);
+            }, 1000)    
+        } else {
+            clearInterval(currRound);
+        }
+        lastTimeCall = timeLeft;
+    }
+};
+
 
 // When Start is clicked, zoom out of instructions, remove from game screen, start timer, generate zits
 $(`.start`).on(`click`, () => {
@@ -114,11 +170,11 @@ $(`.start`).on(`click`, () => {
     }, 1000)
     startTimer();
 
-    // Each 2 seconds, zitAppear is run
-    setInterval(() => {
-        let randInterval = Math.random() * 2000;
-        setTimeout(() => zitAppear(), randInterval);
-    }, 2000);
+    // // Each 2 seconds, createZit is run
+    // setInterval(() => {
+    //     let randInterval = Math.random() * 2000;
+    //     setTimeout(() => createZit(), randInterval);
+    // }, 2000);
 })
 
 
@@ -261,20 +317,15 @@ const endGame = () => {
         // When replay button is pressed, remove gameOver div, start timer again, generate zits
         $(`#replay`).on(`click`, () => {
             $(`.gameOver`).remove();
+            $(`.newZit`).remove();
             timeLeft = 30;
             points = 0;
             updateTime();
             $(`#points`).text(`${points}`);
             startTimer();
-            setInterval(() => {
-                let randInterval = Math.random() * 2000;
-                setTimeout(() => zitAppear(), randInterval);
-            }, 2000);        
         })
     })
 }
-
-
 
 
 
