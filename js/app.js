@@ -1,6 +1,6 @@
 // Pop sound effect
 const pop = new Audio();
-pop.src = "./../sounds/pop.mp3"
+pop.src = "../sounds/pop.mp3"
 
 
 // Timer Countdown Functions
