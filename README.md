@@ -19,7 +19,7 @@ When life gets stressful, it manifests in the form of unsightly zits. There are 
 7. When user clicks Play Again, timer restarts, score is reset, and zits respawn
 
 ## Technologies Used
-HTML, CSS, Javascript, jQuery, JSON
+HTML, CSS, Javascript, jQuery, JSON, 
 Animations from animate.css
 
 ## Approach Taken
