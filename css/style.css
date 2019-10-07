@@ -49,7 +49,6 @@ h1 {
 button {
     font-family: "Gloria Hallelujah";
     font-size: 14px;
-    font-weight: bold;
     cursor: pointer;
     color: #ff8b7b;
     border: 3px dotted #ff8b7b;
@@ -127,6 +126,10 @@ input[type="text"] {
     top: 5px;
     left: 50px;
     line-height: 35px;
+}
+
+.round {
+    color: #ffff66;
 }
 
 .score {

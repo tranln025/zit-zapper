@@ -114,8 +114,8 @@ function createZit() {
     }).appendTo('.gameScreen').fadeIn(); 
 }; 
 
-// Random generation of zits, gets faster every 10 sec. If timeLeft = 0, do not generate any
 
+// Random generation of zits, gets faster every 10 sec. If timeLeft = 0, do not generate any
 
 const adjustZitSpawnSpeed = () => {
     let currRound = null;
@@ -188,14 +188,7 @@ $(`.start`).on(`click`, () => {
         $(`.instructionsContainer`).remove();
     }, 1000)
     startTimer();
-
-    // // Each 2 seconds, createZit is run
-    // setInterval(() => {
-    //     let randInterval = Math.random() * 2000;
-    //     setTimeout(() => createZit(), randInterval);
-    // }, 2000);
 })
-
 
 
 // When fingers overlap zit and spacebar is pressed:
@@ -235,11 +228,8 @@ $(window).on(`keydown`, (event) => {
                 console.log("appearance time: " + zits[i].time);
                 console.log("reactiontime: " + reactionTime);
 
-                // Check if the zit has been popped. If not, award points based on reaction time and update score. Show points earned for each pop
-                // TODO this doesn't work ://
-                // if ($(`#${i}`).hasClass("poppedZit") === false) {
-                    updatePoints();
-                // }
+                // Award points based on reaction time and update score. Show points earned for each pop
+                updatePoints();
             }
         }
     }
@@ -289,16 +279,17 @@ const pointsPopUp = () => {
 
 // Game Over screen & leaderboard
 
-// Dummy values in array so no values show up undefined
-// const leaderboard = [{ name: "", score: "" }, { name: "", score: "" }, { name: "", score: "" }];
+// Create empty leaderboard object
 let leaderboard = {"": ""};
+
+// If a leaderboard exists in local storage, retrieve it and put into our leaderboard
 const localStorage = window.localStorage;
 const lsLeaderboard = localStorage.getItem("leaderboard");
 if (lsLeaderboard) {
     leaderboard = JSON.parse(lsLeaderboard);
 }
 
-// Append input form to get player name, display score, show leaderboard
+// Append input form to get player name
 const endGame = () => {
     $(`.gameContainer`).append(`
         <div class="gameOver animated zoomIn delay-1s">
@@ -316,21 +307,18 @@ const endGame = () => {
     $(`form`).on(`submit`, function (event) {
         event.preventDefault();
     
-        // Push inputted name and score into array
-        // leaderboard.push({
-        //     name: $(`input:text`).val(),
-        //     score: points
-        // });
+        // Add key/value pair of inputted name and score into leaderboard
         leaderboard[$(`input:text`).val()] = points;
 
-        // Sort array by player scores
+        // Sort leaderboard by player scores
         // Source: https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
         let descendingKeys = Object.keys(leaderboard).sort( (a, b) => (leaderboard[a] < leaderboard[b]? 1 : -1));
+
         let firstPlace = descendingKeys[0];
         let secondPlace = descendingKeys.length > 1 ? descendingKeys[1] : "";
         let thirdPlace = descendingKeys.length > 2 ? descendingKeys[2] : "";
 
-        // Replace form with leaderboard
+        // Replace form with score and leaderboard
         $(`.gameOver`).html(`
             <h2>Your score: ${points}</h2>
             <h2 id="leaderboard-header">LEADERBOARD</h2>
@@ -342,6 +330,7 @@ const endGame = () => {
             <button id="replay">PLAY AGAIN</button>
         `);
  
+        // Add updated leaderboard to local storage
         localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
         // When replay button is pressed, remove gameOver div, remove all zits, reset points, restart timer.
@@ -356,16 +345,3 @@ const endGame = () => {
         })
     })
 }
-
-
-
-
-
-
-
-// TODO / Stretch goals
-// Do not allow overlap of zits
-    // Get position of zit
-    // put all zits with class .newZit and .poppedZit in an array
-    // get each zit's coordinates
-// Add sound effects
