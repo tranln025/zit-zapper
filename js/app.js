@@ -343,6 +343,10 @@ const endGame = () => {
             $(`.gameOver`).remove();
             $(`.newZit`).remove();
             timeLeft = 30;
+            $(`.countdown`).css({
+                'color': 'white',
+                'font-weight': 'bold'
+            });
             points = 0;
             updateTime();
             $(`#points`).text(`Points: ${points}`);
